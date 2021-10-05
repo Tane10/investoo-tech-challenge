@@ -1,0 +1,33 @@
+version: "3.3"
+
+services:
+  offers:
+    image: node
+    container_name: offers
+    working_dir: /app
+    restart: always
+    command: ["npm", "run", "dev"]
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - "./:/app:cached"
+    environment:
+      PORT: ${PORT}
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.7@sha256:45ad5952e4f304d39aedb02caf7e0afc30a310e66f7ab60af8acf20fd4a0f54c
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: offers
+
+volumes:
+  mysql-data:
