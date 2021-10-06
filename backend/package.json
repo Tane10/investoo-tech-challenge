@@ -4,7 +4,7 @@
     "description": "",
     "main": "./dist/server.js",
     "scripts": {
-        "dev": "nodemon src/server.js",
+        "dev": "nodemon -L src/server.js",
         "test": "jest --detectOpenHandles --verbose",
         "clear_jest": "jest --clearCache",
         "knex:migrate:latest": "knex migrate:latest",

@@ -8,11 +8,11 @@ services:
     restart: always
     command: ["npm", "run", "dev"]
     ports:
-      - "${PORT}:${PORT}"
+      - "3000:3000"
     volumes:
       - "./:/app:cached"
     environment:
-      PORT: ${PORT}
+      PORT: 3000
     depends_on:
       - mysql
   mysql:

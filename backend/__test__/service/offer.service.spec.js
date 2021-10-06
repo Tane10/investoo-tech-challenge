@@ -1,7 +1,7 @@
-const offerService = require('../../src/services/offer.service')
+const offerService = require("../../src/services/offer.service");
 
 const buildOffer = ({
-  type = 'crypto',
+  type = "crypto",
   name,
   coins = [],
   published = false,
@@ -36,13 +36,17 @@ const buildOffer = ({
     withdrawalMethods,
     languagesSupported,
   },
-})
+});
 
-describe('Offers Service', () => {
-  test('Gets filtered offers', async () => {
-    await Promise.all(['test-1', 'test-2'].map((name) => buildOffer({ name })).map(offerService.createOffer))
+describe("Offers Service", () => {
+  test("Gets filtered offers", async () => {
+    await Promise.all(
+      ["test-1", "test-2"]
+        .map((name) => buildOffer({ name }))
+        .map(offerService.createOffer)
+    );
 
-    const offers = await offerService.getFiltered()
-    expect(offers).toHaveLength(2)
-  })
-})
+    const offers = await offerService.getFiltered();
+    expect(offers).toHaveLength(2);
+  });
+});
