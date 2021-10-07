@@ -1,5 +1,5 @@
 GET http://localhost:3000/api/v1/public/healthz
 
 ####
-GET http://localhost:3000/api/v1/public/offers?coins[eq]=Ae&position[gt]=2&position[lt]=6
+GET http://localhost:3000/api/v1/public/offers?coins[eq]=AE&starRating[gt]=50&position[lt]=6
 #  query: { coins: { eq: 'Ae' }, position: { gt: '2', lt: '6' } },

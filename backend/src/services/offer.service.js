@@ -16,8 +16,8 @@ const createOffer = ({ type, offer } = {}) => {
     .table("offers")
     .insert({ offer: JSON.stringify(offer), slug, type });
 };
-
-/**
+const filterDuplicates = () => {};
+/** =
  * using LHS brackets we can get the query as an object
  * #  query: { coins: { eq: 'Ae' }, position: { gt: '2', lt: '6' } },
  * with this we can then find and select the properties
@@ -25,15 +25,12 @@ const createOffer = ({ type, offer } = {}) => {
  * can use switch to map whats possible
  */
 const getFiltered = async (req) => {
-  // we can get the
   let filteredObjects = [];
   const offers = await knex.table("offers");
   const queryParamsKeys = Object.keys(req.query);
 
-  // { coins: { eq: 'AE' }, position: { gt: '2', lt: '6' } }
-
   /* built on the assumption that anything in an array is a string
-     greater than and less that will never be applied to the array value */
+     greater than and less that will never be applied to the array values */
 
   // validating if there any query params
   if (queryParamsKeys.length !== 0) {
@@ -61,9 +58,17 @@ const getFiltered = async (req) => {
 
                 break;
               case "lt":
-                if (offerObj.offer[queryProperty] < filterOptionValue) break;
+                offerObj.offer[queryProperty] < filterOptionValue
+                  ? filteredObjects.push(offers[key])
+                  : null;
+
+                break;
 
               case "gt":
+                offerObj.offer[queryProperty] > filterOptionValue
+                  ? filteredObjects.push(offers[key])
+                  : null;
+
                 break;
             }
           });
