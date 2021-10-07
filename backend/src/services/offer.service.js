@@ -1,3 +1,4 @@
+const { indexOf } = require("ramda");
 const knex = require("../database/knex");
 const generateSlug = require("../utils/generate-slug");
 
@@ -25,26 +26,52 @@ const createOffer = ({ type, offer } = {}) => {
  */
 const getFiltered = async (req) => {
   // we can get the
-
-  console.log(req.query);
-  const offerId = [];
+  let filteredObjects = [];
   const offers = await knex.table("offers");
+  const queryParamsKeys = Object.keys(req.query);
 
-  if (Object.keys(req.query).length !== 0) {
-    Object.keys(req.query).forEach((idx, value) => {
-      // loop the query params to see they are including in the data
-      for (let offer in offers) {
-        let offerObject = offer.offer;
-        // loop all offers to find the property we require
-        if (offerObject[value]) {
-          // if property is found check the typeof to work out how the handle it
-          // i.e. if array handle as needed etc
+  // { coins: { eq: 'AE' }, position: { gt: '2', lt: '6' } }
 
-          if (typeof offerObject[value] === "Array") {
-          }
+  /* built on the assumption that anything in an array is a string
+     greater than and less that will never be applied to the array value */
+
+  // validating if there any query params
+  if (queryParamsKeys.length !== 0) {
+    // loop through offers
+    for (const [key, offerObj] of offers.entries()) {
+      // check queryProperty
+      queryParamsKeys.forEach((queryProperty, idx) => {
+        // if has property
+        if (offerObj.offer.hasOwnProperty(queryProperty)) {
+          // check the filter keys
+          Object.keys(req.query[queryProperty]).forEach((filterOption) => {
+            const filterOptionValue = req.query[queryProperty][filterOption];
+
+            switch (filterOption) {
+              case "eq":
+                if (Array.isArray(offerObj.offer[queryProperty])) {
+                  offerObj.offer[queryProperty].includes(filterOptionValue)
+                    ? filteredObjects.push(offers[key])
+                    : null;
+                } else {
+                  offerObj.offer[queryProperty] === filterOptionValue
+                    ? filteredObjects.push(offers[key])
+                    : null;
+                }
+
+                break;
+              case "lt":
+                if (offerObj.offer[queryProperty] < filterOptionValue) break;
+
+              case "gt":
+                break;
+            }
+          });
         }
-      }
-    });
+      });
+    }
+
+    return filteredObjects;
   } else {
     return offers;
   }
